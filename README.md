@@ -29,12 +29,13 @@ image leaves out blank lines.
 
 **Not measured, stated up front.**
 
-- No agent invoked the skill to produce the evidence here,
-  and address-comments did not run. The transcript shows only
-  `watch.sh`.
-- Whether an agent that follows `SKILL.md` addresses each
-  marker through address-comments, or stops when
-  address-comments is missing, has not been measured.
+- No agent invoked the skill to produce the demo here, and
+  address-comments did not run in it. The demo transcript
+  shows only `watch.sh`; the agent transcripts are under
+  "Agent invocations" below.
+- Whether an agent that follows `SKILL.md` stops when
+  address-comments is missing has not been measured. Both
+  agent runs had it installed.
 - How often the marker grammar matches a comment that was
   not meant for an agent, or misses one that was, has not
   been measured. A comment such as `# Agents: list of
@@ -47,8 +48,9 @@ image leaves out blank lines.
 - The grep fallback was tested with the BSD grep that ships
   with macOS. It had not been run with GNU grep when this
   release was cut; the CI workflow runs the suite on Ubuntu.
-- Neither Claude Code nor Codex was started to confirm that
-  the invocation names below resolve.
+- Neither install block below was run under a client. The
+  agent runs loaded the skill through `--plugin-dir` (Claude
+  Code) and through a copy committed in the fixture (Codex).
 
 ## What is in it
 
@@ -196,6 +198,17 @@ cut:
 while a person reviews the worktree. review-watch does not
 need swe-day.
 
+## Known limits
+
+In an earlier Claude Code run, not published, the agent
+searched the top two levels of `/` for the skill although
+the prompt told it to stay inside the fixture. In the same
+run it called `watch.sh` with a window of `0` as its
+baseline scan, which scans nothing, and took the result as a
+clean baseline while a marker was present; `SKILL.md` does
+not say that a window of `0` scans nothing. A later
+60-second watch in that run reported the marker.
+
 ## Use it
 
 Read [`skills/review-watch/SKILL.md`](skills/review-watch/SKILL.md)
@@ -212,7 +225,7 @@ fails.
 
 ```sh
 set -eu
-release=v0.1.0
+release=v0.1.1
 install_target="$HOME/.claude/skills/review-watch"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -249,7 +262,7 @@ the block above is `install_target`.
 
 ```sh
 set -eu
-release=v0.1.0
+release=v0.1.1
 install_target="$HOME/.agents/skills/review-watch"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -320,11 +333,52 @@ and the status-3 exit for a directory that does not exist.
 `evidence/demo-manifest.json` records the commands, the
 ripgrep and bash versions, the date, and the SHA-256 of
 `watch.sh`, `SKILL.md` and the transcript, and declares
-that no agent invoked the skill.
+that no agent invoked the skill for that session. Its
+`invocations` list records the agent runs below.
 
 `make check` runs the watcher's tests on both backends and
 a packaging contract that ties this file, both plugin
 manifests, the transcript and the demo images to each other.
+
+### Agent invocations
+
+Each client was given the same prompt (only `/review-watch`
+or `$review-watch` differs) on one synthetic fixture: a
+small Python repository with one `TODO(agent)` marker
+already present in `pricing.py`, with review-watch and
+address-comments v0.1.0 installed. This is one run per
+client, not a benchmark, and no marker was written during a
+watch.
+
+- [`evidence/transcripts/2026-10-08-claude-code-invocation.txt`](evidence/transcripts/2026-10-08-claude-code-invocation.txt):
+  Claude Code 2.1.220 loaded review-watch with the `Skill`
+  tool, found the marker with a baseline scan using its own
+  `Grep` tool rather than `watch.sh`, loaded address-comments
+  with the `Skill` tool, implemented the change with two
+  tests, removed the marker and wrote the review log, then
+  ran a clean 60-second `watch.sh` window. It committed
+  nothing.
+- [`evidence/transcripts/2026-10-08-codex-invocation.txt`](evidence/transcripts/2026-10-08-codex-invocation.txt):
+  Codex 0.146.0 read both `SKILL.md` files; `watch.sh`
+  reported the marker at its first scan, and the agent
+  implemented the change with two tests, removed the marker,
+  wrote the review log and ran a clean 60-second window. It
+  committed nothing.
+
+`scripts/render_invocation.py` rendered both from the
+clients' raw output, which is not committed. The transcripts
+show the prompt, every tool call with its arguments cut at
+300 characters, each call's status where the output gives
+one, and the final message; tool output is left out. The
+only edits are path replacements, listed per run in the
+`invocations` list of `evidence/demo-manifest.json`, which
+also records each transcript's and raw output's SHA-256. A
+root matches only when the character after it is `/`,
+whitespace, a quote, a backslash, `)` or end of text, and the
+character before it is whitespace, a quote, `=`, `(` or start
+of text.
+An earlier Claude Code run that reached paths outside its
+fixture is recorded there with `"published": false`.
 
 ## Contributing
 

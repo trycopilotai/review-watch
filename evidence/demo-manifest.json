@@ -36,5 +36,69 @@
     "edited": false,
     "transforms": [],
     "note": "scripts/record_session.py ran each command in its own bash -c and, after it finished, wrote the command line, the command's standard output and standard error together, and an exit status line built from its exit status. The echo lines were written by the recorder, not run. No line was edited: every path the commands print is relative to the throwaway directory."
-  }
+  },
+  "invocations": [
+    {
+      "product": "Claude Code",
+      "version": "2.1.220",
+      "model": "claude-sonnet-5",
+      "invocation": "Use the /review-watch skill to watch this repository for review markers for 60 seconds, rescanning every 5 seconds, and handle what it finds. Stay inside this directory: do not read or write anything outside it, and do not touch GitHub.",
+      "loaded_through": "two --plugin-dir flags pointing at fresh depth-1 clones of review-watch v0.1.0 and address-comments v0.1.0",
+      "fixture": "A synthetic Python repository (pricing.py with subtotal, one unittest file, a Makefile check target) with one TODO(agent) marker already present in pricing.py asking for apply_discount(amount, percent); a local bare repository as its only remote. review-watch v0.1.0 and address-comments v0.1.0 were both installed. The two plugin clones and the fixture were the only things in a fresh temporary directory.",
+      "date": "2026-10-08",
+      "published": true,
+      "transcript": {
+        "path": "evidence/transcripts/2026-10-08-claude-code-invocation.txt",
+        "sha256": "69986db69ed9ae6d52e4a7bb6f07ae3dfc90ba7ade1c4ef1015520332a023368"
+      },
+      "raw_output_sha256": "cd6de37f3e1e4415bc54730b8818c71d8839b7c96d54f449530db1260c040907",
+      "transforms": [
+        "replace-isolation-root",
+        "replace-plugin-root",
+        "replace-capture-root",
+        "replace-home",
+        "replace-hostname"
+      ],
+      "invoked_the_skill": true,
+      "outcome": "Loaded review-watch with the Skill tool, found the marker with a baseline scan using its own Grep tool rather than watch.sh, loaded address-comments with the Skill tool, added apply_discount and two tests, removed the marker, ran make check (3 tests passed) and wrote .address-comments/review-log.md, then ran watch.sh for 60 seconds with a 5-second poll, which ended with REVIEW_WATCH_WINDOW_ENDED. It committed and pushed nothing."
+    },
+    {
+      "product": "Codex",
+      "version": "0.146.0",
+      "model": "gpt-5.6-sol",
+      "model_note": "The codex exec --json stream does not name the model; this is the model in the client's own session record for the run.",
+      "invocation": "Use the $review-watch skill to watch this repository for review markers for 60 seconds, rescanning every 5 seconds, and handle what it finds. Stay inside this directory: do not read or write anything outside it, and do not touch GitHub.",
+      "loaded_through": "copies of skills/review-watch/ and of address-comments v0.1.0's skills/address-comments/ committed at .agents/skills/ in the fixture",
+      "fixture": "A synthetic Python repository (pricing.py with subtotal, one unittest file, a Makefile check target) with one TODO(agent) marker already present in pricing.py asking for apply_discount(amount, percent); a local bare repository as its only remote. review-watch v0.1.0 and address-comments v0.1.0 were both installed.",
+      "date": "2026-10-08",
+      "published": true,
+      "transcript": {
+        "path": "evidence/transcripts/2026-10-08-codex-invocation.txt",
+        "sha256": "60975cda8256fe349d7a9e10200fc6e01d193349e0bcc34c61018fa6dd03d33c"
+      },
+      "raw_output_sha256": "afe6a213f70393b8afaf257d5e6d710147f66d13ffe5686071846e64508f10c7",
+      "transforms": [
+        "replace-plugin-root",
+        "replace-capture-root",
+        "replace-home",
+        "replace-hostname"
+      ],
+      "invoked_the_skill": true,
+      "outcome": "Read both SKILL.md files, ran watch.sh with a 60-second window and 5-second poll, which reported the marker at once; added apply_discount and two tests, removed the marker, ran make check (3 tests passed) and wrote .address-comments/review-log.md, then ran watch.sh again for 60 seconds, which ended with REVIEW_WATCH_WINDOW_ENDED. It committed and pushed nothing."
+    },
+    {
+      "product": "Claude Code",
+      "version": "2.1.220",
+      "model": "claude-sonnet-5",
+      "invocation": "Use the /review-watch skill to watch this repository for review markers for 60 seconds, rescanning every 5 seconds, and handle what it finds. Stay inside this directory: do not read or write anything outside it, and do not touch GitHub.",
+      "loaded_through": "two --plugin-dir flags pointing at the local review-watch clone at v0.1.0 and a local address-comments clone at v0.1.0, with sibling checkouts of other skills nearby",
+      "fixture": "A synthetic Python repository (pricing.py with subtotal, one unittest file, a Makefile check target) with one TODO(agent) marker already present in pricing.py asking for apply_discount(amount, percent); a local bare repository as its only remote. review-watch v0.1.0 and address-comments v0.1.0 were both installed.",
+      "date": "2026-10-08",
+      "published": false,
+      "published_note": "Its tool calls touch paths outside the fixture, the plugin directories and the client scratch directory, so it was re-run in isolation; no transcript is committed.",
+      "raw_output_sha256": "e4a60460d8ba6427c84927e2b6ca39dfa2e64dd8b0b7336c9a95667a88636b1d",
+      "invoked_the_skill": true,
+      "outcome": "Loaded review-watch, searched the top two levels of / for it, ran watch.sh with a window of 0 as a baseline (which scans nothing) and reported the baseline clean, then ran a 60-second watch that reported the marker, loaded address-comments, added apply_discount, removed the marker, ran the tests and wrote the review log, and ran a second clean 60-second watch. It committed and pushed nothing."
+    }
+  ]
 }
