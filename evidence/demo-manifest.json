@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-08",
+  "skill": {
+    "path": "skills/review-watch/SKILL.md",
+    "sha256": "75edd6616f96c7b0d1d7dc1bf52d609526069a0f8a9446e90132e357d0e909e5"
+  },
+  "programs": [
+    {
+      "path": "skills/review-watch/scripts/watch.sh",
+      "sha256": "2e4c0f85bbdb5ab8e4dff9e9a85b351da969ddba679bdc613443307f8397e828"
+    }
+  ],
+  "agent": {
+    "invoked_the_skill": false,
+    "note": "No agent session invoked the skill or ran address-comments to produce this evidence. scripts/record_session.py ran watch.sh directly while this release was being prepared."
+  },
+  "invocation": {
+    "commands": [
+      "watch() { bash skills/review-watch/scripts/watch.sh \"$@\"; }",
+      "rg --version | head -n 1",
+      "cat worktree/app.py",
+      "watch worktree 2 1",
+      "(sleep 2; printf '# AGENT: rename total to subtotal\\n' >> worktree/app.py) & watch worktree 30 1",
+      "watch worktree 10m",
+      "watch missing-dir 30 1"
+    ],
+    "search_tool": "ripgrep 15.2.0",
+    "shell": "GNU bash 3.2.57(1)-release",
+    "backend": "rg: ripgrep was on PATH, so watch.sh used it and not the grep fallback. tests/test_watch.py covers the grep fallback; this session does not.",
+    "working_directory": "a throwaway directory holding a copy of skills/, empty home/ and tmp/ directories, bin/rg linked to the ripgrep found on PATH, and a synthetic worktree, worktree/, that is a git repository with one commit of app.py written by scripts/record_session.py. Each command ran in its own bash -c with PATH set to bin, /usr/bin and /bin, TMPDIR set to tmp/, HOME set to home/, no git configuration files, and the git identity Example <test@example.com>."
+  },
+  "output": {
+    "path": "evidence/transcripts/watch-session.txt",
+    "sha256": "63de742abeb22d1c2c0b75cec48053eee95b2791d1f2ffbbdb341932762588cf",
+    "edited": false,
+    "transforms": [],
+    "note": "scripts/record_session.py ran each command in its own bash -c and, after it finished, wrote the command line, the command's standard output and standard error together, and an exit status line built from its exit status. The echo lines were written by the recorder, not run. No line was edited: every path the commands print is relative to the throwaway directory."
+  }
+}

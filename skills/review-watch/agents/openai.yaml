@@ -1,0 +1,7 @@
+interface:
+  display_name: "review-watch"
+  short_description:
+    "Address review markers live"
+  default_prompt:
+    "Use $review-watch to watch this worktree and address
+    review markers as I write them."

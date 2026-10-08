@@ -1,0 +1,29 @@
+$ watch() { bash skills/review-watch/scripts/watch.sh "$@"; }
+$ rg --version | head -n 1
+ripgrep 15.2.0
+$ echo "exit status: $?"
+exit status: 0
+$ cat worktree/app.py
+def total(prices):
+    return sum(prices)
+
+$ echo "exit status: $?"
+exit status: 0
+$ watch worktree 2 1
+REVIEW_WATCH_WINDOW_ENDED
+$ echo "exit status: $?"
+exit status: 0
+$ (sleep 2; printf '# AGENT: rename total to subtotal\n' >> worktree/app.py) & watch worktree 30 1
+REVIEW_WATCH_MARKERS
+worktree/app.py:4:# AGENT: rename total to subtotal
+$ echo "exit status: $?"
+exit status: 0
+$ watch worktree 10m
+watch.sh: window_seconds must be a whole number of seconds from 0 to 999999999, got '10m'
+usage: watch.sh <watch_path> [window_seconds] [poll_seconds]
+$ echo "exit status: $?"
+exit status: 2
+$ watch missing-dir 30 1
+watch.sh: rg exited with status 2 while scanning missing-dir; run it by hand to see the error
+$ echo "exit status: $?"
+exit status: 3
