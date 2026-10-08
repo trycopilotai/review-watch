@@ -400,6 +400,13 @@ class RipgrepBackendTest(Backend, unittest.TestCase):
         result = self.run_watch(".", "1", "1")
         self.assertEqual(result.stdout, "REVIEW_WATCH_WINDOW_ENDED\n")
 
+    def test_a_review_log_in_a_hidden_directory_is_skipped(self) -> None:
+        # README Known limits: the published runs' clean windows
+        # rest on this.
+        self.write(".address-comments/review-log.md", "- Marker: `TODO(agent)` add apply_discount\n")
+        result = self.run_watch(".", "1", "1")
+        self.assertEqual(result.stdout, "REVIEW_WATCH_WINDOW_ENDED\n")
+
     def test_gitignored_files_are_skipped_inside_a_git_repository(self) -> None:
         subprocess.run(
             ["git", "init", "-q", str(self.tree)],
@@ -464,6 +471,15 @@ class GrepBackendTest(Backend, unittest.TestCase):
         self.write(".env.sh", "# AGENT: hidden\n")
         result = self.run_watch(".", "5", "1")
         self.assertEqual(matched_lines(result.stdout), ["# AGENT: hidden"])
+
+    def test_a_review_log_in_a_hidden_directory_is_reported(self) -> None:
+        # README Known limits: with grep, the log repeats the
+        # marker at every scan.
+        self.write(".address-comments/review-log.md", "- Marker: `TODO(agent)` add apply_discount\n")
+        result = self.run_watch(".", "5", "1")
+        self.assertEqual(
+            matched_lines(result.stdout), ["- Marker: `TODO(agent)` add apply_discount"]
+        )
 
     def test_gitignore_is_not_read(self) -> None:
         self.write(".gitignore", "build/\n")

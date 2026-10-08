@@ -49,7 +49,12 @@ private channel.
   `git init` in one of them, and four (two per backend)
   remove and then restore the permissions of a fixture file
   or directory. `tests/test_integrations.py` runs `git`
-  against the repository root.
+  against the repository root, and runs
+  `scripts/render_invocation.py` in a subprocess on event
+  files it writes to temporary directories.
+  `scripts/render_invocation.py` reads a client's raw output
+  and a prompt file and writes the transcript to standard
+  output.
 
 ## Markers are instructions
 

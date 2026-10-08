@@ -1,6 +1,6 @@
 {
   "name": "review-watch",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Watch a worktree while a person reviews it, report the agent-directed review markers present at each scan, and hand each one to the separately installed address-comments skill, with a poller that uses ripgrep or grep and does not edit.",
   "author": {
     "name": "trycopilot.ai"

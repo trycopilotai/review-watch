@@ -209,6 +209,19 @@ clean baseline while a marker was present; `SKILL.md` does
 not say that a window of `0` scans nothing. A later
 60-second watch in that run reported the marker.
 
+In both published runs, address-comments wrote a review log
+whose text repeats the marker (`TODO(agent)`) into the
+hidden `.address-comments/` directory. The later
+60-second windows ended clean only because ripgrep skips
+hidden directories. With the grep fallback, which searches
+them, or with the log at a path ripgrep searches, `watch.sh`
+would report that log entry at every scan.
+
+The published Claude Code run's final message says no work
+left the directory. Its calls did read and run the plugin's
+own files outside the fixture, which the prompt did not
+exempt.
+
 ## Use it
 
 Read [`skills/review-watch/SKILL.md`](skills/review-watch/SKILL.md)
@@ -225,7 +238,7 @@ fails.
 
 ```sh
 set -eu
-release=v0.1.1
+release=v0.1.2
 install_target="$HOME/.claude/skills/review-watch"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -262,7 +275,7 @@ the block above is `install_target`.
 
 ```sh
 set -eu
-release=v0.1.1
+release=v0.1.2
 install_target="$HOME/.agents/skills/review-watch"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -356,14 +369,14 @@ watch.
   `Grep` tool rather than `watch.sh`, loaded address-comments
   with the `Skill` tool, implemented the change with two
   tests, removed the marker and wrote the review log, then
-  ran a clean 60-second `watch.sh` window. It committed
-  nothing.
+  ran a 60-second `watch.sh` window that ended clean
+  (see "Known limits" on why). It committed nothing.
 - [`evidence/transcripts/2026-10-08-codex-invocation.txt`](evidence/transcripts/2026-10-08-codex-invocation.txt):
   Codex 0.146.0 read both `SKILL.md` files; `watch.sh`
   reported the marker at its first scan, and the agent
   implemented the change with two tests, removed the marker,
-  wrote the review log and ran a clean 60-second window. It
-  committed nothing.
+  wrote the review log and ran a 60-second window that ended
+  clean. It committed nothing.
 
 `scripts/render_invocation.py` rendered both from the
 clients' raw output, which is not committed. The transcripts

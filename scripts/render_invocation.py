@@ -4,7 +4,8 @@
 Standard library only. The output holds the prompt, every tool call
 (name and arguments, each argument string cut at LIMIT characters
 the same way), each call's exit status where the raw output gives
-one, and the final message verbatim. Tool output is not rendered.
+one, and the final message, copied except for the declared
+replacements. Tool output is not rendered.
 
     python3 scripts/render_invocation.py claude-code RAW PROMPT \
         [--isolation-root DIR] --plugin-root DIR --capture-root DIR \

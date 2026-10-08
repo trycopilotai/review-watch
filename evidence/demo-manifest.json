@@ -60,7 +60,7 @@
         "replace-hostname"
       ],
       "invoked_the_skill": true,
-      "outcome": "Loaded review-watch with the Skill tool, found the marker with a baseline scan using its own Grep tool rather than watch.sh, loaded address-comments with the Skill tool, added apply_discount and two tests, removed the marker, ran make check (3 tests passed) and wrote .address-comments/review-log.md, then ran watch.sh for 60 seconds with a 5-second poll, which ended with REVIEW_WATCH_WINDOW_ENDED. It committed and pushed nothing."
+      "outcome": "Loaded review-watch with the Skill tool, found the marker with a baseline scan using its own Grep tool rather than watch.sh, loaded address-comments with the Skill tool, added apply_discount and two tests, removed the marker, ran make check (3 tests passed) and wrote .address-comments/review-log.md, then ran watch.sh for 60 seconds with a 5-second poll, which ended with REVIEW_WATCH_WINDOW_ENDED because ripgrep skips the hidden .address-comments/ directory where the review log repeats the marker. It committed and pushed nothing. Its final message says no work left the directory, but its calls read and ran the plugin's files outside the fixture."
     },
     {
       "product": "Codex",
@@ -84,7 +84,7 @@
         "replace-hostname"
       ],
       "invoked_the_skill": true,
-      "outcome": "Read both SKILL.md files, ran watch.sh with a 60-second window and 5-second poll, which reported the marker at once; added apply_discount and two tests, removed the marker, ran make check (3 tests passed) and wrote .address-comments/review-log.md, then ran watch.sh again for 60 seconds, which ended with REVIEW_WATCH_WINDOW_ENDED. It committed and pushed nothing."
+      "outcome": "Read both SKILL.md files, ran watch.sh with a 60-second window and 5-second poll, which reported the marker at once; added apply_discount and two tests, removed the marker, ran make check (3 tests passed) and wrote .address-comments/review-log.md, then ran watch.sh again for 60 seconds, which ended with REVIEW_WATCH_WINDOW_ENDED because ripgrep skips the hidden .address-comments/ directory where the review log repeats the marker. It committed and pushed nothing."
     },
     {
       "product": "Claude Code",
