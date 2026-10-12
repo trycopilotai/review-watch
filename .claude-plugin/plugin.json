@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "Watch a worktree while a person reviews it, report the agent-directed review markers present at each scan, and hand each one to the separately installed address-comments skill, with a poller that uses ripgrep or grep and does not edit.",
   "author": {
-    "name": "trycopilot.ai"
+    "name": "trycopilot.ai LLC"
   },
   "homepage": "https://github.com/trycopilotai/review-watch#readme",
   "repository": "https://github.com/trycopilotai/review-watch",
