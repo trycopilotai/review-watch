@@ -110,21 +110,35 @@ def claude_code(raw: str):
         event = json.loads(line)
         kind = event.get("type")
         if kind == "system" and event.get("subtype") == "init":
-            header.append("client: Claude Code %s" % event.get("claude_code_version", "?"))
+            header.append(
+                "client: Claude Code %s" % event.get("claude_code_version", "?")
+            )
             header.append("model: %s" % event.get("model"))
         if kind == "result":
             final = event.get("result", "")
             header.append(
                 "result: %s, %s turns, %s ms"
-                % (event.get("subtype"), event.get("num_turns"), event.get("duration_ms"))
+                % (
+                    event.get("subtype"),
+                    event.get("num_turns"),
+                    event.get("duration_ms"),
+                )
             )
         message = event.get("message")
-        if not isinstance(message, dict) or not isinstance(message.get("content"), list):
+        if not isinstance(message, dict) or not isinstance(
+            message.get("content"), list
+        ):
             continue
         for block in message["content"]:
             if block.get("type") == "tool_use":
-                calls.append((block["id"], block["name"], block.get("input", {}),
-                              event.get("parent_tool_use_id")))
+                calls.append(
+                    (
+                        block["id"],
+                        block["name"],
+                        block.get("input", {}),
+                        event.get("parent_tool_use_id"),
+                    )
+                )
             elif block.get("type") == "tool_result":
                 error = block.get("is_error")
                 status[block["tool_use_id"]] = (
@@ -145,7 +159,9 @@ def codex(raw: str, last_message: str):
         event = json.loads(line)
         if event.get("type") == "turn.completed":
             usage = event.get("usage", {})
-            header.append("result: turn completed, %s output tokens" % usage.get("output_tokens"))
+            header.append(
+                "result: turn completed, %s output tokens" % usage.get("output_tokens")
+            )
         if event.get("type") != "item.completed":
             continue
         item = event["item"]
@@ -156,9 +172,14 @@ def codex(raw: str, last_message: str):
             lines.append("[%d] command_execution" % number)
             lines.extend(argument_lines({"command": item.get("command", "")}))
             code = item.get("exit_code")
-            lines.append("    status: %s" % ("exit %s" % code if code is not None else "not reported"))
+            lines.append(
+                "    status: %s"
+                % ("exit %s" % code if code is not None else "not reported")
+            )
         else:
-            arguments = {k: v for k, v in item.items() if k not in ("id", "type", "status")}
+            arguments = {
+                k: v for k, v in item.items() if k not in ("id", "type", "status")
+            }
             lines.append("[%d] %s" % (number, item.get("type")))
             lines.extend(argument_lines(arguments))
             lines.append("    status: %s" % item.get("status", "not reported"))

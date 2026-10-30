@@ -4,9 +4,8 @@ A skill that has a coding agent watch a worktree while a
 person reviews it, and hand the agent-directed review
 markers the reviewer writes, such as `// AGENT: rename this`
 or `TODO(agent)`, to the address-comments skill when a scan
-finds them.
-It ships one program, `watch.sh`, a poller that detects
-markers and does not edit.
+finds them. It ships one program, `watch.sh`, a poller that
+detects markers and does not edit.
 
 watch.sh reports a marker written while it watches.
 
@@ -38,13 +37,13 @@ image leaves out blank lines.
   agent runs had it installed.
 - How often the marker grammar matches a comment that was
   not meant for an agent, or misses one that was, has not
-  been measured. A comment such as `# Agents: list of
-  workers` matches, and so does a Markdown bullet such as
-  `* Agent: rename`, through the `*` leader. A marker after
-  a leader the grammar
-  does not list is missed: `/// agent:`, `//! agent:`,
-  `/** agent:`, `## agent:` and `; agent:` are not reported
-  by either backend in the tests.
+  been measured. A comment such as
+  `# Agents: list of workers` matches, and so does a
+  Markdown bullet such as `* Agent: rename`, through the `*`
+  leader. A marker after a leader the grammar does not list
+  is missed: `/// agent:`, `//! agent:`, `/** agent:`,
+  `## agent:` and `; agent:` are not reported by either
+  backend in the tests.
 - The grep fallback was tested with the BSD grep that ships
   with macOS. It had not been run with GNU grep when this
   release was cut; the CI workflow runs the suite on Ubuntu.
@@ -75,28 +74,29 @@ deadline passes. A marker already present ends the watch at
 the first scan.
 
 `watch.sh` reports the markers present at a scan in the
-files it searches, not only new ones. The skill relies on address-comments
-removing each marker it addresses, so a marker that stays in
-the tree is reported again at the next start.
+files it searches, not only new ones. The skill relies on
+address-comments removing each marker it addresses, so a
+marker that stays in the tree is reported again at the next
+start.
 
 ### Exit statuses
 
-| Status | When                                                                                               |
-| ------ | -------------------------------------------------------------------------------------------------- |
-| 0      | It printed `REVIEW_WATCH_MARKERS` and the matches, or `REVIEW_WATCH_WINDOW_ENDED`.                  |
-| 1      | No `watch_path` argument was given, or it was empty.                                               |
+| Status | When                                                                                                                                                                                                                                                                                                                       |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0      | It printed `REVIEW_WATCH_MARKERS` and the matches, or `REVIEW_WATCH_WINDOW_ENDED`.                                                                                                                                                                                                                                         |
+| 1      | No `watch_path` argument was given, or it was empty.                                                                                                                                                                                                                                                                       |
 | 2      | `window_seconds` is empty or not a whole number of seconds from 0 to 999999999 without leading zeros, for example `10m` or `08`; or the watch path is, or is inside, an excluded directory; or it is a symlink that does not point to a directory; or it, or its parent directory, cannot be entered to check where it is. |
-| 3      | Neither `rg` nor `grep` is on `PATH`, `date` or `sleep` is not on `PATH`, or the search exited with status 2 or more. |
+| 3      | Neither `rg` nor `grep` is on `PATH`, `date` or `sleep` is not on `PATH`, or the search exited with status 2 or more.                                                                                                                                                                                                      |
 
 Statuses 1, 2 and 3 print a message to standard error and
 nothing to standard output. Status 3 also covers a scan in
 which the tool found markers but also hit an error, for
 example a file that could not be read; those markers are not
-printed.
-A window of `0` ends with `REVIEW_WATCH_WINDOW_ENDED`
-without scanning at all. A watch path that starts with `-`,
-including `-` itself, is searched as `./<path>`, so neither
-tool reads it as an option or as standard input.
+printed. A window of `0` ends with
+`REVIEW_WATCH_WINDOW_ENDED` without scanning at all. A watch
+path that starts with `-`, including `-` itself, is searched
+as `./<path>`, so neither tool reads it as an option or as
+standard input.
 
 ### Excluded directories
 
@@ -133,8 +133,8 @@ cut:
 
 - ripgrep skips hidden files and directories, files that a
   `.gitignore` excludes inside a git repository, and files
-  that a `.ignore` or `.rgignore` file excludes. grep searches
-  all of them.
+  that a `.ignore` or `.rgignore` file excludes. grep
+  searches all of them.
 - Not a difference: both skip directories named
   `node_modules`, `.next` and `.git` at any depth, wherever
   `watch.sh` runs from and however the watch path is
@@ -145,8 +145,8 @@ cut:
 - ripgrep's hidden-file and ignore rules apply to what it
   finds while it descends, not to the watch path itself:
   given `.github` as the watch path, it searches it.
-- `REVIEW_WATCH_LABELS` is passed to whichever tool runs,
-  so write it in syntax both accept, such as
+- `REVIEW_WATCH_LABELS` is passed to whichever tool runs, so
+  write it in syntax both accept, such as
   `reviewer[[:space:]]+says:`.
 - With more than one matching file, the order of the lines
   is not fixed.
@@ -156,12 +156,12 @@ cut:
   single binary file as the watch path, ripgrep prints a
   `binary file matches` notice, which `watch.sh` reports as
   a marker; grep skips it.
-- Not a difference: a watch path that is itself a symlink
-  to a directory is searched by both, because `watch.sh`
-  passes its physical path to the tool.
+- Not a difference: a watch path that is itself a symlink to
+  a directory is searched by both, because `watch.sh` passes
+  its physical path to the tool.
 - Given a single file as the watch path, ripgrep prints
-  `line:text` without the file name; the BSD grep that
-  ships with macOS prints the file name.
+  `line:text` without the file name; the BSD grep that ships
+  with macOS prints the file name.
 - Matching of non-ASCII text, such as a non-ASCII letter
   after `to agent` or a non-ASCII space after a comment
   leader, depends on the tool and, for grep, on the locale.
@@ -175,8 +175,8 @@ cut:
 
 ## Not included
 
-- `address-comments` is required and is not shipped here.
-  It is a separate skill, published as
+- `address-comments` is required and is not shipped here. It
+  is a separate skill, published as
   `trycopilotai/address-comments`, that owns the marker
   grammar, the change, the marker's removal and the review
   log entry. review-watch only detects markers and delegates
@@ -185,11 +185,12 @@ cut:
   `SKILL.md` tells the agent to report the markers it found,
   say that address-comments is missing, and stop without
   editing.
-- A per-repository wrapper is not shipped either.
-  `SKILL.md` lets one bind which address-comments to call, the watched path, the excludes and the window, and to
-  name any extra operator labels for `REVIEW_WATCH_LABELS`.
-  It is optional. Without one, `SKILL.md` tells the agent to
-  take the watched path from the request, use the skill named
+- A per-repository wrapper is not shipped either. `SKILL.md`
+  lets one bind which address-comments to call, the watched
+  path, the excludes and the window, and to name any extra
+  operator labels for `REVIEW_WATCH_LABELS`. It is optional.
+  Without one, `SKILL.md` tells the agent to take the
+  watched path from the request, use the skill named
   `address-comments`, and use `watch.sh`'s defaults: a
   600-second window, a 12-second poll, and its fixed
   excludes.
@@ -211,11 +212,11 @@ not say that a window of `0` scans nothing. A later
 
 In both published runs, address-comments wrote a review log
 whose text repeats the marker (`TODO(agent)`) into the
-hidden `.address-comments/` directory. The later
-60-second windows ended clean only because ripgrep skips
-hidden directories. With the grep fallback, which searches
-them, or with the log at a path ripgrep searches, `watch.sh`
-would report that log entry at every scan.
+hidden `.address-comments/` directory. The later 60-second
+windows ended clean only because ripgrep skips hidden
+directories. With the grep fallback, which searches them, or
+with the log at a path ripgrep searches, `watch.sh` would
+report that log entry at every scan.
 
 The published Claude Code run's final message says no work
 left the directory. Its calls did read and run the plugin's
@@ -224,7 +225,8 @@ exempt.
 
 ## Use it
 
-Read [`skills/review-watch/SKILL.md`](skills/review-watch/SKILL.md)
+Read
+[`skills/review-watch/SKILL.md`](skills/review-watch/SKILL.md)
 before you install it. The file is an instruction set that
 steers an agent, so both installs below are pinned to a tag
 rather than to `main`.
@@ -306,10 +308,10 @@ rm -rf "$install_tmp"
 Invoke it as `$review-watch`.
 
 Each block works in a temporary `.review-watch.*` directory
-beside the target and removes it on exit. An existing install
-at the target is replaced. A dangling symlink at the target
-is not: `mv` fails with "Not a directory", the block exits
-non-zero, and the link is left in place.
+beside the target and removes it on exit. An existing
+install at the target is replaced. A dangling symlink at the
+target is not: `mv` fails with "Not a directory", the block
+exits non-zero, and the link is left in place.
 
 While it clones, `git` warns that the tag "is not a commit"
 and notes a detached `HEAD`. Both are expected for a clone
@@ -327,8 +329,8 @@ logo or composer icon.
 
 ## Evidence
 
-`evidence/transcripts/watch-session.txt` is the captured
-run behind the claim at the top of this file.
+`evidence/transcripts/watch-session.txt` is the captured run
+behind the claim at the top of this file.
 `scripts/record_session.py` wrote each `$` line and each
 exit status; the rest is the commands' output, standard
 output and standard error together, unedited. Every path the
@@ -345,12 +347,12 @@ and the status-3 exit for a directory that does not exist.
 
 `evidence/demo-manifest.json` records the commands, the
 ripgrep and bash versions, the date, and the SHA-256 of
-`watch.sh`, `SKILL.md` and the transcript, and declares
-that no agent invoked the skill for that session. Its
+`watch.sh`, `SKILL.md` and the transcript, and declares that
+no agent invoked the skill for that session. Its
 `invocations` list records the agent runs below.
 
-`make check` runs the watcher's tests on both backends and
-a packaging contract that ties this file, both plugin
+`make check` runs the watcher's tests on both backends and a
+packaging contract that ties this file, both plugin
 manifests, the transcript and the demo images to each other.
 
 ### Agent invocations
@@ -366,11 +368,12 @@ watch.
 - [`evidence/transcripts/2026-10-08-claude-code-invocation.txt`](evidence/transcripts/2026-10-08-claude-code-invocation.txt):
   Claude Code 2.1.220 loaded review-watch with the `Skill`
   tool, found the marker with a baseline scan using its own
-  `Grep` tool rather than `watch.sh`, loaded address-comments
-  with the `Skill` tool, implemented the change with two
-  tests, removed the marker and wrote the review log, then
-  ran a 60-second `watch.sh` window that ended clean
-  (see "Known limits" on why). It committed nothing.
+  `Grep` tool rather than `watch.sh`, loaded
+  address-comments with the `Skill` tool, implemented the
+  change with two tests, removed the marker and wrote the
+  review log, then ran a 60-second `watch.sh` window that
+  ended clean (see "Known limits" on why). It committed
+  nothing.
 - [`evidence/transcripts/2026-10-08-codex-invocation.txt`](evidence/transcripts/2026-10-08-codex-invocation.txt):
   Codex 0.146.0 read both `SKILL.md` files; `watch.sh`
   reported the marker at its first scan, and the agent
@@ -387,11 +390,11 @@ only edits are path replacements, listed per run in the
 `invocations` list of `evidence/demo-manifest.json`, which
 also records each transcript's and raw output's SHA-256. A
 root matches only when the character after it is `/`,
-whitespace, a quote, a backslash, `)` or end of text, and the
-character before it is whitespace, a quote, `=`, `(` or start
-of text.
-An earlier Claude Code run that reached paths outside its
-fixture is recorded there with `"published": false`.
+whitespace, a quote, a backslash, `)` or end of text, and
+the character before it is whitespace, a quote, `=`, `(` or
+start of text. An earlier Claude Code run that reached paths
+outside its fixture is recorded there with
+`"published": false`.
 
 ## Contributing
 

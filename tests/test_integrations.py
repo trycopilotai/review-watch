@@ -216,7 +216,7 @@ class ReadmeTest(unittest.TestCase):
         lines = read(TRANSCRIPT).splitlines()
         clean = lines.index("$ watch worktree 2 1")
         self.assertEqual(lines[clean + 1], "REVIEW_WATCH_WINDOW_ENDED")
-        before = lines[: clean]
+        before = lines[:clean]
         self.assertNotIn("AGENT", "\n".join(before))
         writes = [i for i, line in enumerate(lines) if line.startswith("$ (sleep 2;")]
         self.assertEqual(len(writes), 1)
@@ -291,30 +291,30 @@ class ExcludeRuleTest(unittest.TestCase):
     )
 
     CHECK = (
-        'The watch path is checked in two forms, and refused if e'
-        'ither has an excluded component: as written, with `.` an'
-        'd `..` components folded away, and where it physically i'
+        "The watch path is checked in two forms, and refused if e"
+        "ither has an excluded component: as written, with `.` an"
+        "d `..` components folded away, and where it physically i"
         "s, which is a directory's physical absolute path, or for"
         " anything else its parent directory's physical absolute "
-        'path and its own name. So `node_modules/../src` is searc'
-        'hed; `.` inside `node_modules`, a symlink into one, and '
-        'a path through a symlink named `node_modules` are refuse'
-        'd. A symlink that does not point to a directory is refus'
-        'ed with exit 2, with or without a trailing slash, becaus'
-        'e where it leads is not checked. When a symlink makes th'
-        'e physical path differ from the folded one, the physical'
-        ' path is searched and its matches print that path. A pat'
-        'h whose parent does not exist is checked as written. The'
-        ' names are compared case-sensitively; case-insensitive f'
-        'ile systems were not tested.'
+        "path and its own name. So `node_modules/../src` is searc"
+        "hed; `.` inside `node_modules`, a symlink into one, and "
+        "a path through a symlink named `node_modules` are refuse"
+        "d. A symlink that does not point to a directory is refus"
+        "ed with exit 2, with or without a trailing slash, becaus"
+        "e where it leads is not checked. When a symlink makes th"
+        "e physical path differ from the folded one, the physical"
+        " path is searched and its matches print that path. A pat"
+        "h whose parent does not exist is checked as written. The"
+        " names are compared case-sensitively; case-insensitive f"
+        "ile systems were not tested."
     )
     TIMING = (
-        'A window above 0 that ends with `REVIEW_WATCH_WINDOW_END'
-        'ED` lasts at least `window_seconds` and can run up to on'
-        'e second longer, because the deadline is counted in whol'
-        'e seconds, plus the poll interval and the scan in progre'
-        'ss when the deadline passes. A marker already present en'
-        'ds the watch at the first scan.'
+        "A window above 0 that ends with `REVIEW_WATCH_WINDOW_END"
+        "ED` lasts at least `window_seconds` and can run up to on"
+        "e second longer, because the deadline is counted in whol"
+        "e seconds, plus the poll interval and the scan in progre"
+        "ss when the deadline passes. A marker already present en"
+        "ds the watch at the first scan."
     )
 
     def test_the_rule_reads_the_same_in_all_three_documents(self) -> None:
@@ -421,7 +421,9 @@ class InvocationTest(unittest.TestCase):
             text = read(ROOT / item["transcript"]["path"])
             if item["product"] == "Claude Code":
                 self.assertIn("] Skill\n    skill: review-watch:review-watch", text)
-                self.assertIn("] Skill\n    skill: address-comments:address-comments", text)
+                self.assertIn(
+                    "] Skill\n    skill: address-comments:address-comments", text
+                )
             else:
                 self.assertIn(".agents/skills/review-watch/SKILL.md", text)
                 self.assertIn(".agents/skills/address-comments/SKILL.md", text)
@@ -431,7 +433,13 @@ class InvocationTest(unittest.TestCase):
     def test_transcripts_name_no_machine(self) -> None:
         for path in INVOCATIONS.glob("*-invocation.txt"):
             text = read(path)
-            for marker in ("/var/folders", "/private/", "/Users/", "/home/", "/tmp/claude-"):
+            for marker in (
+                "/var/folders",
+                "/private/",
+                "/Users/",
+                "/home/",
+                "/tmp/claude-",
+            ):
                 self.assertNotIn(marker, text, path)
 
     def test_readme_links_both_transcripts(self) -> None:
@@ -464,7 +472,12 @@ class RendererTest(unittest.TestCase):
         return done.stdout
 
     def call(self, command: str) -> list:
-        use = {"type": "tool_use", "id": "t1", "name": "Bash", "input": {"command": command}}
+        use = {
+            "type": "tool_use",
+            "id": "t1",
+            "name": "Bash",
+            "input": {"command": command},
+        }
         result = {"type": "tool_result", "tool_use_id": "t1", "is_error": False}
         return [
             {"type": "assistant", "message": {"content": [use]}},
@@ -476,9 +489,12 @@ class RendererTest(unittest.TestCase):
         text = self.run_renderer(
             "claude-code",
             self.call("ls /x/iso/plugin /x/iso/work/f /x/iso2 /h/u/a"),
-            "--isolation-root", "/x/iso",
-            "--plugin-root", "/x/iso/plugin",
-            "--home", "/h/u",
+            "--isolation-root",
+            "/x/iso",
+            "--plugin-root",
+            "/x/iso/plugin",
+            "--home",
+            "/h/u",
         )
         self.assertIn("command: ls /iso/plugin /iso/work/f /x/iso2 ~/a", text)
         self.assertIn("    status: ok", text)
@@ -489,21 +505,26 @@ class RendererTest(unittest.TestCase):
             "claude-code",
             self.call(
                 "ls /x/iso /x/iso/a /p/x/iso/a /x/iso-old /x/iso.bak /x/iso2"
-                " a/x/iso \"/x/iso\" (/x/iso) d=/x/iso h.example h.example.org"
+                ' a/x/iso "/x/iso" (/x/iso) d=/x/iso h.example h.example.org'
             ),
-            "--isolation-root", "/x/iso",
-            "--hostname", "h.example",
+            "--isolation-root",
+            "/x/iso",
+            "--hostname",
+            "h.example",
         )
         self.assertIn(
             "command: ls /iso /iso/a /p/x/iso/a /x/iso-old /x/iso.bak /x/iso2"
-            " a/x/iso \"/iso\" (/iso) d=/iso host h.example.org",
+            ' a/x/iso "/iso" (/iso) d=/iso host h.example.org',
             text,
         )
 
     def test_a_cut_never_leaves_part_of_a_replaced_path(self) -> None:
         long_root = "/r/" + "d" * 400
         text = self.run_renderer(
-            "claude-code", self.call("cd " + long_root + "/w"), "--capture-root", long_root
+            "claude-code",
+            self.call("cd " + long_root + "/w"),
+            "--capture-root",
+            long_root,
         )
         self.assertIn("command: cd /work/w", text)
         self.assertNotIn("/r/d", text)
@@ -520,7 +541,8 @@ class RendererTest(unittest.TestCase):
         text = self.run_renderer(
             "codex",
             [{"type": "item.completed", "item": item}],
-            "--capture-root", "/f",
+            "--capture-root",
+            "/f",
         )
         self.assertEqual(text.count("status: completed"), 1)
         self.assertIn('changes: [{"path": "/work/a.py", "kind": "update"}]', text)
