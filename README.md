@@ -4,12 +4,18 @@ A skill that has a coding agent watch a worktree while a
 person reviews it, and hand the agent-directed review
 markers the reviewer writes, such as `// AGENT: rename this`
 or `TODO(agent)`, to the address-comments skill when a scan
-finds them. It ships one program, `watch.sh`, a poller that
-detects markers and does not edit.
+finds them.
+
+---
 
 [![auto-lint-pr](https://github.com/trycopilotai/review-watch/actions/workflows/auto-lint-pr.yml/badge.svg)](https://github.com/trycopilotai/review-watch/actions/workflows/auto-lint-pr.yml)
 [![check](https://github.com/trycopilotai/review-watch/actions/workflows/check.yml/badge.svg)](https://github.com/trycopilotai/review-watch/actions/workflows/check.yml)
 [![lint](https://github.com/trycopilotai/review-watch/actions/workflows/lint.yml/badge.svg)](https://github.com/trycopilotai/review-watch/actions/workflows/lint.yml)
+
+---
+
+It ships one program, `watch.sh`, a poller that detects
+markers and does not edit.
 
 watch.sh reports a marker written while it watches.
 
