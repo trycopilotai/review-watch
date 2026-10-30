@@ -7,6 +7,10 @@ or `TODO(agent)`, to the address-comments skill when a scan
 finds them. It ships one program, `watch.sh`, a poller that
 detects markers and does not edit.
 
+[![auto-lint-pr](https://github.com/trycopilotai/review-watch/actions/workflows/auto-lint-pr.yml/badge.svg)](https://github.com/trycopilotai/review-watch/actions/workflows/auto-lint-pr.yml)
+[![check](https://github.com/trycopilotai/review-watch/actions/workflows/check.yml/badge.svg)](https://github.com/trycopilotai/review-watch/actions/workflows/check.yml)
+[![lint](https://github.com/trycopilotai/review-watch/actions/workflows/lint.yml/badge.svg)](https://github.com/trycopilotai/review-watch/actions/workflows/lint.yml)
+
 watch.sh reports a marker written while it watches.
 
 <picture>
