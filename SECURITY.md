@@ -30,9 +30,9 @@ private channel.
   output and standard error. A tree, argument or label value
   that makes it write a file, delete one, or run another
   command is a valid report.
-- **The install blocks.** The two README blocks run `mkdir
-  -p`, `mktemp -d`, `git clone`, `cp`, `mv` and `rm -rf`,
-  all inside one skills directory under `$HOME`. A
+- **The install blocks.** The two README blocks run
+  `mkdir -p`, `mktemp -d`, `git clone`, `cp`, `mv` and
+  `rm -rf`, all inside one skills directory under `$HOME`. A
   repository state that makes either block write or delete
   outside its install target is in scope.
 - **The build scripts.** `assets/build.py` finds a Chrome or
@@ -59,12 +59,13 @@ private channel.
 ## Markers are instructions
 
 This is how the skill works, and a known limit, not a
-finding: anyone who can write to the watched path can write a
-marker, and the skill hands the markers a scan finds to
-address-comments as work for the agent. That includes files a reviewer did not
-write, such as a dependency's sources or a generated file,
-when they are under the watch path and not excluded. Watch
-only a tree whose writers you would let direct the agent.
+finding: anyone who can write to the watched path can write
+a marker, and the skill hands the markers a scan finds to
+address-comments as work for the agent. That includes files
+a reviewer did not write, such as a dependency's sources or
+a generated file, when they are under the watch path and not
+excluded. Watch only a tree whose writers you would let
+direct the agent.
 
 ## Known limits of `watch.sh`
 
@@ -132,6 +133,6 @@ These are known limits, not findings:
 ## What is out of scope
 
 `SKILL.md` tells the agent to make its changes through
-address-comments. That skill's behaviour, ripgrep's, grep's, and that of Claude Code, Codex,
-or any other host, are out of scope here. Report those to
-their own maintainers.
+address-comments. That skill's behaviour, ripgrep's, grep's,
+and that of Claude Code, Codex, or any other host, are out
+of scope here. Report those to their own maintainers.

@@ -29,6 +29,9 @@ jobs:
       # watch.sh needs ripgrep; the suites use the Python
       # standard library only.
       - name: Install ripgrep
-        run: sudo apt-get update && sudo apt-get install -y ripgrep
-      - name: Run the watcher tests and the packaging contract
+        run:
+          sudo apt-get update && sudo apt-get install -y
+          ripgrep
+      - name:
+          Run the watcher tests and the packaging contract
         run: make check

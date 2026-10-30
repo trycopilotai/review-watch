@@ -16,8 +16,9 @@ or later, `bash`, `git`, `grep`, `date`, `sleep` and ripgrep
 fail, not skip, when `rg` is missing. The grep tests prefer
 `/usr/bin/grep`. Four tests, two per backend, remove a
 fixture's permissions and skip when run as root. The
-packaging contract needs a git clone, because it reads `git
-log`; its release-tag test skips when `HEAD` carries no tag.
+packaging contract needs a git clone, because it reads
+`git log`; its release-tag test skips when `HEAD` carries no
+tag.
 
 **The packaging contract asserts on the README.** These will
 fail on an innocent-looking prose edit:
@@ -54,8 +55,8 @@ with ripgrep on `PATH`, writes the transcript, and rewrites
 the manifest's hashes, date, ripgrep version and bash
 version. It needs `bash`, `git`, `rg` and `python3`.
 `make demo` rebuilds the two images from the transcript.
-`make assets` rebuilds the social preview and needs Chrome or
-Chromium; `make asset-check` does not.
+`make assets` rebuilds the social preview and needs Chrome
+or Chromium; `make asset-check` does not.
 
 ## What is most useful
 
@@ -69,7 +70,8 @@ ready to pick up.
 - **A difference between the two backends** that the README
   does not list.
 - **A run where an agent edited without address-comments**,
-  or did not stop when it was missing. Say which host ran it.
+  or did not stop when it was missing. Say which host ran
+  it.
 
 ## Pull requests
 
@@ -85,8 +87,8 @@ Keep `SKILL.md` under 500 lines; the suite enforces it.
 Frontmatter carries `name` and `description` and nothing
 else.
 
-The top-level `skill` is a symlink to `skills/review-watch/`.
-Do not reverse that orientation.
+The top-level `skill` is a symlink to
+`skills/review-watch/`. Do not reverse that orientation.
 
 Commit with your own identity and no `Co-authored-by`
 trailer of any kind. The suite fails on one anywhere in

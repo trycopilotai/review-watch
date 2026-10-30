@@ -178,9 +178,7 @@ class Backend:
         self.write("notes.py", "# reviewer says: split this\n")
         without = self.run_watch(".", "1", "1")
         self.assertEqual(without.stdout, "REVIEW_WATCH_WINDOW_ENDED\n")
-        with_label = self.run_watch(
-            ".", "5", "1", labels="reviewer[[:space:]]+says:"
-        )
+        with_label = self.run_watch(".", "5", "1", labels="reviewer[[:space:]]+says:")
         self.assertEqual(
             matched_lines(with_label.stdout), ["# reviewer says: split this"]
         )
@@ -255,7 +253,9 @@ class Backend:
             result = self.run_watch(path, "5", "1")
             self.assertEqual(result.returncode, 2, path)
             self.assertEqual(result.stdout, "", path)
-            self.assertIn("is a symlink that does not point to a directory", result.stderr)
+            self.assertIn(
+                "is a symlink that does not point to a directory", result.stderr
+            )
 
     def test_a_symlinked_node_modules_cannot_be_used_to_reach_its_target(
         self,
@@ -403,7 +403,10 @@ class RipgrepBackendTest(Backend, unittest.TestCase):
     def test_a_review_log_in_a_hidden_directory_is_skipped(self) -> None:
         # README Known limits: the published runs' clean windows
         # rest on this.
-        self.write(".address-comments/review-log.md", "- Marker: `TODO(agent)` add apply_discount\n")
+        self.write(
+            ".address-comments/review-log.md",
+            "- Marker: `TODO(agent)` add apply_discount\n",
+        )
         result = self.run_watch(".", "1", "1")
         self.assertEqual(result.stdout, "REVIEW_WATCH_WINDOW_ENDED\n")
 
@@ -411,8 +414,12 @@ class RipgrepBackendTest(Backend, unittest.TestCase):
         subprocess.run(
             ["git", "init", "-q", str(self.tree)],
             check=True,
-            env={"PATH": os.environ.get("PATH", ""), "GIT_CONFIG_NOSYSTEM": "1",
-                 "GIT_CONFIG_GLOBAL": os.devnull, "HOME": str(self.tree)},
+            env={
+                "PATH": os.environ.get("PATH", ""),
+                "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CONFIG_GLOBAL": os.devnull,
+                "HOME": str(self.tree),
+            },
         )
         self.write(".gitignore", "build/\n")
         self.write("build/out.js", "// AGENT: generated\n")
@@ -475,7 +482,10 @@ class GrepBackendTest(Backend, unittest.TestCase):
     def test_a_review_log_in_a_hidden_directory_is_reported(self) -> None:
         # README Known limits: with grep, the log repeats the
         # marker at every scan.
-        self.write(".address-comments/review-log.md", "- Marker: `TODO(agent)` add apply_discount\n")
+        self.write(
+            ".address-comments/review-log.md",
+            "- Marker: `TODO(agent)` add apply_discount\n",
+        )
         result = self.run_watch(".", "5", "1")
         self.assertEqual(
             matched_lines(result.stdout), ["- Marker: `TODO(agent)` add apply_discount"]
@@ -492,6 +502,7 @@ class GrepBackendTest(Backend, unittest.TestCase):
         for path in (".", "b.dat"):
             result = self.run_watch(path, "1", "1")
             self.assertEqual(result.stdout, "REVIEW_WATCH_WINDOW_ENDED\n", path)
+
 
 class ArgumentTest(unittest.TestCase):
     def setUp(self) -> None:
@@ -550,7 +561,10 @@ class ArgumentTest(unittest.TestCase):
 
     def test_a_missing_clock_or_sleep_is_loud(self) -> None:
         (self.base / "a.py").write_text("# AGENT: present\n", encoding="utf-8")
-        for tools, missing in ((("grep", "sleep"), "date"), (("grep", "date"), "sleep")):
+        for tools, missing in (
+            (("grep", "sleep"), "date"),
+            (("grep", "date"), "sleep"),
+        ):
             path = str(bin_dir(self.base, tools))
             result = self.run_watch(path, ".", "5", "1")
             self.assertEqual(result.returncode, 3, missing)
